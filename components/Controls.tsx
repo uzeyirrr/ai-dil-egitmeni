@@ -73,7 +73,7 @@ export default function Controls() {
                   strokeWidth={0}
                 />
               </span>
-              <span>End Call</span>
+              <span>Aramayı Sonlandır</span>
             </Button>
           </motion.div>
         ) : null}

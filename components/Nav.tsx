@@ -16,7 +16,7 @@ export const Nav = () => {
       <div className={"ml-auto flex items-center gap-1"}>
         <Button
           onClick={() => {
-            window.open(pkg.homepage, "_blank", "noopener noreferrer");
+            window.open("https://github.com/uzeyirrr/ai-dil-egitmeni/", "_blank", "noopener noreferrer");
           }}
           variant={"ghost"}
           className={"ml-auto flex items-center gap-1.5 rounded-full"}
@@ -24,7 +24,7 @@ export const Nav = () => {
           <span>
             <Github className={"size-4"} />
           </span>
-          <span>Star on GitHub</span>
+          <span>GitHub'da Yıldızla</span>
         </Button>
         <Button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -38,7 +38,7 @@ export const Nav = () => {
               <Moon className={"size-4"} />
             )}
           </span>
-          <span>{theme === 'dark' ? "Light" : "Dark"} Mode</span>
+          <span>{theme === 'dark' ? "Açık" : "Koyu"} Tema</span>
         </Button>
       </div>
     </div>

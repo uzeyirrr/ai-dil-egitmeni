@@ -54,7 +54,7 @@ const Messages = forwardRef<
                         "text-xs capitalize font-medium leading-none opacity-50 tracking-tight"
                       )}
                     >
-                      {msg.message.role}
+                      {msg.message.role === "user" ? "Kullanıcı" : "Öğretmen"}
                     </div>
                     <div
                       className={cn(

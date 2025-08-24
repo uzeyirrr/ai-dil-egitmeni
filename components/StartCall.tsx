@@ -63,6 +63,7 @@ export default function StartCall({ configId, accessToken }: { configId?: string
                      auth: { type: "accessToken", value: accessToken },
                      configId,
                      sessionSettings: {
+                       type: "session_settings",
                        systemPrompt: englishTeacherPrompt
                      }
                    })

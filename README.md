@@ -11,11 +11,13 @@ Senivio, Hume AI'nin [Empathic Voice Interface](https://hume.docs.buildwithfern.
 
 ## ✨ Özellikler
 
-- 🎤 **Sesli Konuşma**: Gerçek zamanlı ses tanıma ve sentezleme
+- 🎤 **Sesli Konuşma**: Hume AI ile gerçek zamanlı ses tanıma ve sentezleme
+- 💬 **Chat Modu**: Google AI (Gemini) ile metin tabanlı konuşma
 - 🧠 **AI Öğretmen**: Yapay zeka destekli İngilizce öğretmeni
 - 📱 **Modern UI**: Responsive ve kullanıcı dostu arayüz
 - 🌙 **Tema Desteği**: Açık/koyu tema seçenekleri
 - 🎯 **Kişiselleştirilmiş Öğrenme**: Seviyeye uygun dersler
+- 🔄 **AI Seçimi**: Hume AI veya Google AI arasında seçim yapabilme
 
 ## 🚀 Kurulum
 
@@ -45,6 +47,7 @@ Senivio, Hume AI'nin [Empathic Voice Interface](https://hume.docs.buildwithfern.
    ```env
    HUME_API_KEY=your_hume_api_key
    HUME_SECRET_KEY=your_hume_secret_key
+   GOOGLE_AI_API_KEY=your_google_ai_api_key
    ```
 
 4. **Uygulamayı çalıştırın**
@@ -68,12 +71,21 @@ Senivio, Hume AI'nin [Empathic Voice Interface](https://hume.docs.buildwithfern.
 
 ## 📝 API Anahtarları
 
+### Hume AI
 Hume AI API anahtarlarını almak için:
 
 1. [Hume AI Portal](https://beta.hume.ai/)'a giriş yapın
 2. [API Keys](https://beta.hume.ai/settings/keys) sayfasına gidin
 3. API Key ve Secret Key'inizi alın
 4. `.env.local` dosyasına ekleyin
+
+### Google AI (Gemini)
+Google AI API anahtarını almak için:
+
+1. [Google AI Studio](https://makersuite.google.com/app/apikey)'ya giriş yapın
+2. "Create API Key" butonuna tıklayın
+3. API Key'inizi kopyalayın
+4. `.env.local` dosyasına `GOOGLE_AI_API_KEY` olarak ekleyin
 
 ## 🌐 Deployment
 

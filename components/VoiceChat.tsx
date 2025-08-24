@@ -122,14 +122,19 @@ export default function VoiceChat({ accessToken }: VoiceChatProps) {
 
   const sendMessage = async (message: string) => {
     try {
-      const response = await fetch("/api/google-ai", {
+      // Kısa mesajları filtrele
+      if (message.trim().length < 2) return;
+      
+      setAiResponse(""); // Yanıtı temizle
+      
+      const response = await fetch("/api/google-ai-stream", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message,
-          systemPrompt: `You are an English teacher. Respond in English and help the student improve their English skills. Keep responses short and conversational.`
+          systemPrompt: `You are an English teacher. Respond in English and help the student improve their English skills. Keep responses very short and conversational.`
         }),
       });
 
@@ -137,11 +142,38 @@ export default function VoiceChat({ accessToken }: VoiceChatProps) {
         throw new Error("Failed to get response");
       }
 
-      const data = await response.json();
-      setAiResponse(data.response);
-      
-      // AI yanıtını sesli olarak söyle
-      speakResponse(data.response);
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = "";
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.text) {
+                  fullResponse += data.text;
+                  setAiResponse(fullResponse);
+                }
+                if (data.done) {
+                  // Stream tamamlandı, sesli yanıt ver
+                  speakResponse(fullResponse);
+                  break;
+                }
+              } catch (e) {
+                // JSON parse hatası, devam et
+              }
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error("Error sending message:", error);
       setAiResponse("Üzgünüm, bir hata oluştu.");
@@ -154,37 +186,38 @@ export default function VoiceChat({ accessToken }: VoiceChatProps) {
     console.log('Audio processed:', audioBlob.size, 'bytes');
   };
 
-     const speakResponse = (text: string) => {
-     if ('speechSynthesis' in window) {
-       setIsSpeaking(true);
-       const utterance = new SpeechSynthesisUtterance(text);
-       utterance.lang = 'en-US';
-       utterance.rate = 0.8;
-       utterance.pitch = 1;
-       
-       utterance.onend = () => {
-         setIsSpeaking(false);
-         // AI konuşması bittikten sonra dinlemeye devam et
-         if (isConnected && isContinuousMode && recognitionRef.current) {
-           setTimeout(() => {
-             recognitionRef.current.start();
-           }, 500);
-         }
-       };
-       
-       speechSynthesis.speak(utterance);
-     }
-   };
+       const speakResponse = (text: string) => {
+    if ('speechSynthesis' in window) {
+      setIsSpeaking(true);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9; // Biraz daha hızlı
+      utterance.pitch = 1.1; // Biraz daha yüksek ton
+      utterance.volume = 0.9;
+      
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        // AI konuşması bittikten sonra dinlemeye devam et
+        if (isConnected && isContinuousMode && recognitionRef.current) {
+          setTimeout(() => {
+            recognitionRef.current.start();
+          }, 300); // Daha hızlı yeniden başlat
+        }
+      };
+      
+      speechSynthesis.speak(utterance);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="max-w-md w-full space-y-6">
-                 <div className="text-center">
-           <h2 className="text-2xl font-bold mb-2">Sesli İngilizce Dersi</h2>
-           <p className="text-muted-foreground">
-             Google AI Studio benzeri gerçek zamanlı sesli görüşme
-           </p>
-         </div>
+                           <div className="text-center">
+            <h2 className="text-2xl font-bold mb-2">Sesli İngilizce Dersi</h2>
+            <p className="text-muted-foreground">
+              Gemini 2.0 Flash ile gerçek zamanlı stream görüşme
+            </p>
+          </div>
 
                    {/* Dil Seçimi */}
           <div className="flex justify-center gap-2">
@@ -286,8 +319,9 @@ export default function VoiceChat({ accessToken }: VoiceChatProps) {
            <p>🌍 Dil seçin (İngilizce/Türkçe)</p>
            <p>🔄 Sürekli dinleme modu aktif</p>
            <p>🎤 Mikrofon butonuna basın ve konuşun</p>
+           <p>⚡ Gerçek zamanlı stream yanıtları</p>
            <p>🔊 AI İngilizce olarak yanıt verecek</p>
-           <p>💬 Gerçek zamanlı sesli görüşme deneyimi</p>
+           <p>💬 Google AI Studio benzeri deneyim</p>
          </div>
       </div>
     </div>

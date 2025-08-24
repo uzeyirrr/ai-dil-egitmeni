@@ -21,8 +21,10 @@ export async function POST(request: NextRequest) {
         parts: [{ text: msg.content }],
       })) || [],
       generationConfig: {
-        maxOutputTokens: 1000,
-        temperature: 0.7,
+        maxOutputTokens: 500, // Daha kısa yanıtlar için
+        temperature: 0.8, // Daha doğal konuşma için
+        topP: 0.9,
+        topK: 40
       },
     });
 

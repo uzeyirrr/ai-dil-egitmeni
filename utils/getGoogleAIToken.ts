@@ -14,5 +14,5 @@ export const getGoogleAIToken = async () => {
 export const createGoogleAIModel = async () => {
   const apiKey = await getGoogleAIToken();
   const genAI = new GoogleGenerativeAI(apiKey);
-  return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  return genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" }); // Real-time stream için yeni model
 };
